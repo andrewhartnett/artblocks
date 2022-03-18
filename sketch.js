@@ -21,42 +21,65 @@ const tokenData = genTokenData(123);
 
 const shapes = []
 const possibleShapes = [
-  '01.png',
-  '02.png',
-  '03.png',
-  '04.png',
-  '05.png',
-  '06.png',
-  '09.png',
-  '10.png',
-  '11.png',
-  '12.png',
-  '13.png',
-  'cluster01.png',
-  'cluster02.png',
-  'cluster03.png',
-  'cluster04.png',
-  'cluster05.png',
-  'cluster06.png',
-  'cluster07.png',
-  'cluster08.png',
-  'cluster09.png',
+  {filename: 'outlineBlack.png', min: 1, max: 5},
+  {filename: 'outlineBlack2.png', min: 1, max: 5},
+  {filename: 'outlineBlack3.png', min: 1, max: 5},
+  // {filename: 'outlineBlue.png', min: 1, max: 3},
+  {filename: 'outlineOrange.png', min: 1, max: 10},
+  {filename: 'outlinePink.png', min: 1, max: 10},
+  {filename: 'solidBlack.png', min: 1, max: 5},
+  {filename: 'solidBlue.png', min: 1, max: 10},
+  {filename: 'solidLime.png', min: 1, max: 30},
+  {filename: 'solidPink.png', min: 1, max: 10},
+  {filename: 'solidWhite.png', min: 1, max: 5},
+  {filename: 'solidWhite2.png', min: 1, max: 5},
+  {filename: 'solidYellowish.png', min: 1, max: 30},
+  {filename: 'cluster01.png', min: 1, max: 5},
+  {filename: 'cluster02.png', min: 1, max: 5},
+  {filename: 'cluster03.png', min: 1, max: 5},
+  {filename: 'cluster04.png', min: 1, max: 5},
+  {filename: 'cluster05.png', min: 1, max: 5},
+  {filename: 'cluster06.png', min: 1, max: 5},
+  {filename: 'cluster07.png', min: 1, max: 5},
+  {filename: 'cluster08.png', min: 1, max: 5},
+  {filename: 'cluster09.png', min: 1, max: 5},
 ]
 
 const images = []
 
 function preload() {
-  // img = loadImage('./01_small.png');
   randomHelper = new Random()
 
-  const totalImages = randomHelper.random_int(2, 8)
+  const totalImages = randomHelper.random_int(3, 8)
 
-  for (let i = 0; i < totalImages; i++) {
+  // Criteria
+  let hasSolid = false
+  let hasOutline = false
+  let hasTotalImages = false
+
+  while(!hasSolid || !hasOutline || !hasTotalImages) {
     const index = randomHelper.random_int(0, possibleShapes.length - 1)
-    const img = loadImage(`./shapes/${possibleShapes[index]}`)
-    images.push({img: img, filename: possibleShapes[index], qty: null})
+    const filename = possibleShapes[index].filename
+    const img = loadImage(`./shapes/${filename}`)
 
+    const qty = randomHelper.random_int(possibleShapes[index].min, possibleShapes[index].max)
+
+    images.push({img, filename: filename, qty})
+
+    if(images.length >= totalImages){
+      hasTotalImages = true
+    }
+
+    if(filename.indexOf('solid') !== -1 && filename.indexOf('Pink') == -1 && filename.indexOf('Blue') == -1) {
+      hasSolid = true
+    }
+
+    if(filename.indexOf('outline') !== -1) {
+      hasOutline = true
+    }
   }
+
+  console.log('totalImages', totalImages)
 
 }
 
@@ -69,19 +92,13 @@ function setup() {
     for (let i = 0; i < images.length; i++) {
       const img = images[i]
 
-      if(img.filename.indexOf('cluster') > -1) {
-        img.qty = randomHelper.random_int(1, 5)
-      }else{
-        img.qty = randomHelper.random_int(5, 50)
-      }
-      
-
       for (let i = 0; i < img.qty; i++) {
         shapes.push(new Shape(img))
       }
+
     }
+
     console.log(images)
-    
 }
 
 function draw() {  
