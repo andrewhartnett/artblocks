@@ -28,18 +28,18 @@ const possibleShapes = [
   {filename: 'outlineOrange.png', min: 1, max: 10},
   {filename: 'outlinePink.png', min: 1, max: 10},
   {filename: 'solidBlack.png', min: 1, max: 5},
-  {filename: 'solidBlue.png', min: 1, max: 10},
+  {filename: 'solidBlue.png', min: 1, max: 8},
   {filename: 'solidLime.png', min: 1, max: 30},
   {filename: 'solidPink.png', min: 1, max: 10},
   {filename: 'solidWhite.png', min: 1, max: 5},
   {filename: 'solidWhite2.png', min: 1, max: 5},
-  {filename: 'solidYellowish.png', min: 1, max: 30},
-  {filename: 'cluster01.png', min: 1, max: 5},
+  {filename: 'solidYellowish.png', min: 1, max: 12},
+  // {filename: 'cluster01.png', min: 1, max: 5},
   {filename: 'cluster02.png', min: 1, max: 5},
-  {filename: 'cluster03.png', min: 1, max: 5},
+  // {filename: 'cluster03.png', min: 1, max: 5},
   {filename: 'cluster04.png', min: 1, max: 5},
   {filename: 'cluster05.png', min: 1, max: 5},
-  {filename: 'cluster06.png', min: 1, max: 5},
+  // {filename: 'cluster06.png', min: 1, max: 5},
   {filename: 'cluster07.png', min: 1, max: 5},
   {filename: 'cluster08.png', min: 1, max: 5},
   {filename: 'cluster09.png', min: 1, max: 5},
@@ -50,14 +50,15 @@ const images = []
 function preload() {
   randomHelper = new Random()
 
-  const totalImages = randomHelper.random_int(3, 8)
+  const totalImages = randomHelper.random_int(5, 10)
 
   // Criteria
   let hasSolid = false
   let hasOutline = false
   let hasTotalImages = false
+  let hasCluster = false
 
-  while(!hasSolid || !hasOutline || !hasTotalImages) {
+  while(!hasSolid || !hasOutline || !hasTotalImages || !hasCluster) {
     const index = randomHelper.random_int(0, possibleShapes.length - 1)
     const filename = possibleShapes[index].filename
     const img = loadImage(`./shapes/${filename}`)
@@ -76,6 +77,10 @@ function preload() {
 
     if(filename.indexOf('outline') !== -1) {
       hasOutline = true
+    }
+
+    if(filename.indexOf('cluster') !== -1) {
+      hasCluster = true
     }
   }
 
