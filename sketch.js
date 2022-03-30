@@ -41,15 +41,15 @@ const possibleShapes = [
   {filename: 'cluster09.png', min: 1, max: 5},
 ]
 
-const bgs = [
-  {filename: '1.png', image: ''},
-  {filename: '2.png', image: ''},
-  {filename: '3.png', image: ''},
-]
-
 const shapes = []
 
-let bgIndex = null
+const bgColors = [
+  '#0e1137',
+  '#e58225',
+  '#000000'
+]
+
+let bgColor = '#FFFFFF'
 
 function preload() {
   randomHelper = new Random()
@@ -59,11 +59,6 @@ function preload() {
     possibleShape.image = loadImage(`./shapes/${possibleShape.filename}`)
     possibleShape.qty = randomHelper.random_int(possibleShape.min, possibleShape.max)
   }
-
-  for (let i = 0; i < bgs.length; i++) {
-    const bg = bgs[i];
-    bg.image = loadImage(`./backgrounds/${bg.filename}`)
-  }
 }
 
 function setup() {
@@ -71,12 +66,14 @@ function setup() {
   imageMode(CENTER);
 
   // 25% chance
-  const hasBackground = randomHelper.random_int(1, 4) === 4
+  const hasBackground = randomHelper.random_int(1, 4) === 1
 
   let totalImages = randomHelper.random_int(5, 10)
 
   if(hasBackground) {
-    totalImages -= 3
+    let bgColorIndex = randomHelper.random_int(0, bgColors.length - 1)
+    totalImages -= 2
+    bgColor = bgColors[bgColorIndex]
   }
 
   let hasCluster = false
@@ -88,9 +85,6 @@ function setup() {
     const index = randomHelper.random_int(0, possibleShapes.length - 1)
     const shapeData = possibleShapes[index]
 
-    if(hasBackground) {
-      shapeData.qty -= 1
-    }
 
     for (let n = 0; n < shapeData.qty; n++) {
       shapes.push(new Shape(shapeData))
@@ -102,23 +96,11 @@ function setup() {
 
     iterations++
   }
-
-  if(hasBackground) {
-    bgIndex = randomHelper.random_int(0, bgs.length - 1)
-  }
-  
   
 }
 
 function draw() { 
-  background(255);
-
-  if(bgIndex !== null){
-    push()
-    translate(width / 2, height / 2);
-    image(bgs[bgIndex].image, 0, 0, 800, 800)
-    pop()
-  }
+  background(bgColor);
 
   for(let i = 0; i < shapes.length; i++) {
     shapes[i].draw()
