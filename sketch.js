@@ -41,7 +41,15 @@ const possibleShapes = [
   {filename: 'cluster09.png', min: 1, max: 5},
 ]
 
+const bgs = [
+  {filename: '1.png', image: ''},
+  {filename: '2.png', image: ''},
+  {filename: '3.png', image: ''},
+]
+
 const shapes = []
+
+let bgIndex = null
 
 function preload() {
   randomHelper = new Random()
@@ -51,13 +59,25 @@ function preload() {
     possibleShape.image = loadImage(`./shapes/${possibleShape.filename}`)
     possibleShape.qty = randomHelper.random_int(possibleShape.min, possibleShape.max)
   }
+
+  for (let i = 0; i < bgs.length; i++) {
+    const bg = bgs[i];
+    bg.image = loadImage(`./backgrounds/${bg.filename}`)
+  }
 }
 
 function setup() {
   createCanvas(800, 800)
   imageMode(CENTER);
 
-  const totalImages = randomHelper.random_int(5, 10)
+  // 25% chance
+  const hasBackground = randomHelper.random_int(1, 4) === 4
+
+  let totalImages = randomHelper.random_int(5, 10)
+
+  if(hasBackground) {
+    totalImages -= 3
+  }
 
   let hasCluster = false
   let iterations = 0
@@ -68,7 +88,9 @@ function setup() {
     const index = randomHelper.random_int(0, possibleShapes.length - 1)
     const shapeData = possibleShapes[index]
 
-    console.log(shapeData)
+    if(hasBackground) {
+      shapeData.qty -= 1
+    }
 
     for (let n = 0; n < shapeData.qty; n++) {
       shapes.push(new Shape(shapeData))
@@ -80,14 +102,27 @@ function setup() {
 
     iterations++
   }
+
+  if(hasBackground) {
+    bgIndex = randomHelper.random_int(0, bgs.length - 1)
+  }
+  
   
 }
 
 function draw() { 
   background(255);
-    for(let i = 0; i < shapes.length; i++) {
-      shapes[i].draw()
-    }
+
+  if(bgIndex !== null){
+    push()
+    translate(width / 2, height / 2);
+    image(bgs[bgIndex].image, 0, 0, 800, 800)
+    pop()
+  }
+
+  for(let i = 0; i < shapes.length; i++) {
+    shapes[i].draw()
+  }
 }
 
 class Shape {
@@ -98,7 +133,6 @@ class Shape {
     this.rotation = randomHelper.random_num(-180, 180)
     this.w = img.image.width
     this.h = img.image.height
-    // console.log({filename: img.filename, w: this.w, h: this.h})
   }
 
   draw() {
