@@ -66,7 +66,7 @@ function setup() {
   imageMode(CENTER);
 
   // 25% chance
-  const hasBackground = randomHelper.random_int(1, 4) === 1
+  const hasBackground = randomHelper.random_int(1, 5) === 1
 
   let totalImages = randomHelper.random_int(5, 10)
 
